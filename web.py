@@ -15,7 +15,6 @@ def hello():
 def run():
     now = datetime.now(timezone.utc).astimezone(BRUSSELS_TZ)
     today = date(now.year, now.month, now.day)
-    pub_date = today
     pending_publications = select_pending_pub_flows()
     for pub_flow in pending_publications:
         try:
@@ -30,6 +29,7 @@ def run():
             else:
                 try_pub_date = today
             root_elem = request_decision_details(pub_flow["numac"], try_pub_date)
+            pub_date = try_pub_date
         except MalformedStaatsbladResponseException:
             logger.warning(f"Failed getting valid api response for publication with numac {pub_flow['numac']} " + \
             f"(expected pub date {pub_flow['expected_pub_date'] if pub_flow['expected_pub_date'] else 'unknown'}). " + \
