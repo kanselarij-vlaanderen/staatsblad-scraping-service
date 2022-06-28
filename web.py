@@ -28,6 +28,7 @@ def run():
                     try_pub_date = today
             else:
                 try_pub_date = today
+            logger.info(f"Requesting staatsblad entry for numac {pub_flow['numac']} on supposed publication date {try_pub_date} ...")
             root_elem = request_decision_details(pub_flow["numac"], try_pub_date)
             pub_date = try_pub_date
         except MalformedStaatsbladResponseException:

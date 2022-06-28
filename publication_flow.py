@@ -36,7 +36,7 @@ WHERE {
     records = result_to_records(results)
     for r in records:
         if r["expected_pub_date"]:
-            r["expected_pub_date"] = datetime.fromisoformat(r["expected_pub_date"].replace("Z", "+00:00"))
+            r["expected_pub_date"] = datetime.fromisoformat(r["expected_pub_date"].replace("Z", "+00:00")) # Python fromisoformat limitation
     return records
 
 def insert_decision(numac, pub_date, responsible, prom_date=None, title=None):

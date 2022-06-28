@@ -29,7 +29,7 @@ API_BASE_URL = "https://www.ejustice.just.fgov.be/cgi/api2.pl?lg=N"
 def request_decision_details(numac, pub_date):
     formatted_pub_date = pub_date.strftime("%Y-%m-%d")
     req_url = API_BASE_URL + f"&pd={formatted_pub_date}" + f"&numac={numac}"
-    logger.info(f"requesting url {req_url}")
+    logger.debug(f"requesting url {req_url}")
     response = get(req_url)
     content = response.text
 
