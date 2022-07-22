@@ -9,6 +9,17 @@ Note that the service creates [`eli:LegalResource`'s](https://eur-lex.europa.eu/
 - ELI URI's under `http://www.ejustice.just.fgov.be/eli/` get generated 1 or more days after effective publication, while the HTML-api provides **realtime results**.
 - As also mentioned in [lod-sbmb documentation](https://github.com/Fedict/lod-sbmb), only primary legislation gets an ELI-URI as identifier under the `http://www.ejustice.just.fgov.be/eli/` namespace. The ELI-listing endpoint thus only covers part of the publication-flows. The api used by this service on the other hand covers **áll publications**.
 
+### Configuration
+
+The service is designed to run the linking process to happen periodically, according to a configurable cron pattern. The cron pattern is to be configured in env var `CRON_PATTERN`. Example docker-compose entry:
+```yml
+staatsblad-scraping:
+  image: kanselarij/staatsblad-scraping-service:0.0.2
+  restart: "always"
+  environment:
+    CRON_PATTERN: "20 */7 * * *"
+```
+
 ### REST API
 #### POST /run
 
