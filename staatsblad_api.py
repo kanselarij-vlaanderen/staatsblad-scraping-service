@@ -38,8 +38,9 @@ def request_decision_details(numac, pub_date):
 
     # The endpoint doesn't differentiate between empty and valid responses by means
     # of HTTP status codes. below xpath expression is used to determine if response is valid instead
-    pub_date_elems = root.xpath(f"//h3/font[@color=\"Red\" and contains(text(), \"Publicatie : {formatted_pub_date}\")]")
-    is_published = bool(pub_date_elems)
+    # it looks for a unique link element that is only present on published items
+    pub_link_elems = root.xpath(f"//a[@id=\"link-text\" and contains(text(), \"{numac}\")]")
+    is_published = bool(pub_link_elems)
 
     if is_published:
         return root
@@ -47,7 +48,7 @@ def request_decision_details(numac, pub_date):
         raise MalformedStaatsbladResponseException(f"Invalid response for page with publication date {pub_date} and numac {numac}")
 
 def extract_decision_details(root):
-    full_title = root.xpath("//h3/center/u/text()")[0].strip()
+    full_title = root.xpath("//div[@class=\"page__section page__section--top\"]/p[@class=\"intro-text\"]/text()")[0].strip()
     try:
         formatted_prom_date, title = full_title.split(". - ") # 21 SEPTEMBER 2021. - Nationale Orden
         prom_d, prom_m, prom_y = formatted_prom_date.split(" ") # 21 SEPTEMBER 2021
@@ -55,5 +56,5 @@ def extract_decision_details(root):
     except ValueError: # https://www.ejustice.just.fgov.be/cgi/api2.pl?lg=N&pd=2022-05-24&numac=2022020908
         prom_date = None
         title = None
-    responsible_entity = root.xpath("//body/center/table/tr/td/font/text()")[0].strip()
+    responsible_entity = root.xpath("//div[@class=\"page__section page__section--top\"]/h1[@class=\"page__title\"]/span/text()")[0].strip()
     return responsible_entity, prom_date, title
